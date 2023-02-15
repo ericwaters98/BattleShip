@@ -1,0 +1,587 @@
+
+package battleship;
+
+public abstract class Ship {
+
+//instance variables
+  private int bowRow;
+
+  private int bowColumn;
+
+  private int length;
+
+  private boolean horizontal;
+
+  private boolean[] hit;
+  
+
+  
+
+//constructor
+  public Ship(int length){
+    this.length = length;
+    this.hit = new boolean[length];
+  }
+
+
+//getter methods
+  public int getLength(){
+    return this.length;
+  }
+
+  public int getBowRow(){
+    return this.bowRow;
+  }
+
+  public int getBowColumn(){
+    return this.bowColumn;
+  }
+
+  public boolean[] getHit(){
+    return this.hit;
+  }
+
+  public boolean isHorizontal(){
+    return this.horizontal;
+  }
+
+
+
+//setter methods
+  public void setBowRow(int row){
+    this.bowRow = row;
+  }
+
+  public void setBowColumn(int column){
+    this.bowColumn = column;
+  }
+
+  public void setHorizontal(boolean horizontal){
+    this.horizontal = horizontal;
+  }
+
+
+//abstract methods
+
+  public abstract String getShipType();
+
+
+//other methods
+//bow is to the right, bow is toward the bottom
+
+  boolean okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean){
+    int shipLength = this.getLength();
+
+    Ship[][] shipArray = ocean.getShipArray();
+
+    if (shipArray[row][column].getShipType()!= "empty"){return false;}
+
+    else if (horizontal == true) {
+      int stern = column - (shipLength - 1);
+      if (stern < 0) {return false;}
+      else if (shipLength == 2 && column == 0){return false;}
+      else if (shipLength == 3 && column == 0){return false;}
+      else if (shipLength == 3 && column == 1){return false;}
+      else if (shipLength == 4 && column == 0){return false;}
+      else if (shipLength == 4 && column == 1){return false;}
+      else if (shipLength == 4 && column == 2){return false;}
+
+//horizontal and not touching edges  . remove none
+      else if (0 < row && row < 9 && 0 < column && column < 9 && 0 < stern && stern < 9){
+      if (shipArray[row][stern - 1].getShipType() == "empty" && shipArray[row - 1][stern - 1].getShipType() == "empty" && 
+      shipArray[row + 1][stern - 1].getShipType() == "empty" && shipArray[row - 1][stern].getShipType() == "empty" &&
+      shipArray[row + 1][stern].getShipType() == "empty" && shipArray[row - 1][stern + 1].getShipType() == "empty" &&
+      shipArray[row + 1][stern + 1].getShipType() == "empty" && shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[row + 1][column - 1].getShipType() == "empty" && shipArray[row - 1][column].getShipType() == "empty" &&
+      shipArray[row + 1][column].getShipType() == "empty" && shipArray[row - 1][column + 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty" && shipArray[row + 1][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}}
+
+//horizontal ONLY touching right edge.  remove column+1
+      else if (0 < row && row < 9 && column == 9 && 0 < stern){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[row + 1][9].getShipType() == "empty" && shipArray[row - 1][9].getShipType() == "empty" &&
+            shipArray[row + 1][8].getShipType() == "empty" && shipArray[row - 1][8].getShipType() == "empty" &&
+            shipArray[row][8].getShipType() == "empty") {return true;}
+              else {return false;}
+        }
+        else{ //if not a submarine
+          if (shipArray[row][stern - 1].getShipType() == "empty" && shipArray[row - 1][stern - 1].getShipType() == "empty" && 
+      shipArray[row + 1][stern - 1].getShipType() == "empty" && shipArray[row - 1][stern].getShipType() == "empty" &&
+      shipArray[row + 1][stern].getShipType() == "empty" && shipArray[row - 1][stern + 1].getShipType() == "empty" &&
+      shipArray[row + 1][stern + 1].getShipType() == "empty" && shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[row + 1][column - 1].getShipType() == "empty" && shipArray[row - 1][column].getShipType() == "empty" &&
+      shipArray[row + 1][column].getShipType() == "empty") {return true;}
+      else {return false;}
+
+        }
+      }
+
+//horizontal and ONLY touching left edge.   remove stern-1
+      else if (0 < row && row < 9 && stern == 0){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[row + 1][0].getShipType() == "empty" && shipArray[row - 1][0].getShipType() == "empty" &&
+            shipArray[row + 1][1].getShipType() == "empty" && shipArray[row - 1][1].getShipType() == "empty" &&
+            shipArray[row][1].getShipType() == "empty") {return true;}
+              else {return false;}
+        }
+        else{ //if not a submarine
+          if (shipArray[row - 1][stern].getShipType() == "empty" &&
+      shipArray[row + 1][stern].getShipType() == "empty" && shipArray[row - 1][stern + 1].getShipType() == "empty" &&
+      shipArray[row + 1][stern + 1].getShipType() == "empty" && shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[row + 1][column - 1].getShipType() == "empty" && shipArray[row - 1][column].getShipType() == "empty" &&
+      shipArray[row + 1][column].getShipType() == "empty" && shipArray[row - 1][column + 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty" && shipArray[row + 1][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+
+      }
+      }
+
+//horizontal ONLY touching top edge    remove row-1
+      else if (row == 0 && 0 < column && column < 9 && 0 < stern && stern < 9){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[0][column - 1].getShipType() == "empty" && shipArray[0][column + 1].getShipType() == "empty" &&
+            shipArray[1][column - 1].getShipType() == "empty" && shipArray[1][column + 1].getShipType() == "empty" &&
+            shipArray[1][column].getShipType() == "empty") {return true;}
+              else {return false;}
+        }
+        else{ //if not a submarine
+          if (shipArray[row][stern - 1].getShipType() == "empty" && 
+      shipArray[row + 1][stern].getShipType() == "empty" &&
+      shipArray[row + 1][stern + 1].getShipType() == "empty" &&
+      shipArray[row + 1][column - 1].getShipType() == "empty" &&
+      shipArray[row + 1][column].getShipType() == "empty" &&
+      shipArray[row + 1][column + 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+
+      }
+      }
+
+//horizontal ONLY touching bottom edge.   remove row+1
+      else if (row == 9 && 0 < column && column < 9 && 0 < stern && stern < 9){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[9][column - 1].getShipType() == "empty" && shipArray[9][column + 1].getShipType() == "empty" &&
+            shipArray[8][column - 1].getShipType() == "empty" && shipArray[8][column + 1].getShipType() == "empty" &&
+            shipArray[8][column].getShipType() == "empty") {return true;}
+              else {return false;}
+
+      }
+      else { //if not a submarine
+          if (shipArray[row][stern - 1].getShipType() == "empty" &&  
+              shipArray[row - 1][stern - 1].getShipType() == "empty" &&
+              shipArray[row - 1][stern].getShipType() == "empty" &&
+              shipArray[row - 1][stern + 1].getShipType() == "empty" &&
+              shipArray[row - 1][column - 1].getShipType() == "empty" &&
+              shipArray[row - 1][column].getShipType() == "empty" &&
+              shipArray[row][column + 1].getShipType() == "empty"){return true;}
+              else {return false;}
+
+      }
+      }
+
+//horizontal touching top right corner.  remove column+1 and remove row-1
+      else if (row == 0 && column == 9 && 0 < stern){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[0][8].getShipType() == "empty" && shipArray[1][8].getShipType() == "empty" &&
+            shipArray[1][9].getShipType() == "empty") {return true;}
+              else {return false;}
+      }
+      else { //if not a submarine
+          if (shipArray[row][stern - 1].getShipType() == "empty" &&  
+              shipArray[row + 1][stern - 1].getShipType() == "empty" && 
+              shipArray[row + 1][stern].getShipType() == "empty" &&
+              shipArray[row + 1][stern + 1].getShipType() == "empty" && 
+              shipArray[row + 1][column - 1].getShipType() == "empty" && 
+              shipArray[row + 1][column].getShipType() == "empty"){return true;}
+              else {return false;}
+
+      }
+      }
+//horizontal touching top left corner.   remove row-1 and remove stern-1
+      else if (row == 0 && stern == 0){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[0][column + 1].getShipType() == "empty" && shipArray[1][column + 1].getShipType() == "empty" &&
+            shipArray[1][column].getShipType() == "empty") {return true;}
+              else {return false;}
+      }
+      else { //if not a submarine
+          if (
+              shipArray[row + 1][stern].getShipType() == "empty" &&
+              shipArray[row + 1][stern + 1].getShipType() == "empty" &&
+              shipArray[row + 1][column - 1].getShipType() == "empty" && 
+              shipArray[row + 1][column].getShipType() == "empty" && 
+              shipArray[row][column + 1].getShipType() == "empty" && shipArray[row + 1][column + 1].getShipType() == "empty"){return true;}
+              else {return false;}
+
+      }
+      }
+//horizontal touching bottom right corner.    remove row+1 and remove column+1
+      else if (row == 9 && column == 9 && 0 < stern){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[9][column - 1].getShipType() == "empty" && shipArray[8][column - 1].getShipType() == "empty" &&
+            shipArray[8][column].getShipType() == "empty") {return true;}
+              else {return false;}
+      }
+      else { //if not a submarine
+          if (shipArray[row][stern - 1].getShipType() == "empty" && shipArray[row - 1][stern - 1].getShipType() == "empty" && 
+              shipArray[row - 1][stern].getShipType() == "empty" &&
+              shipArray[row - 1][stern + 1].getShipType() == "empty" &&
+              shipArray[row - 1][column - 1].getShipType() == "empty" &&
+              shipArray[row - 1][column].getShipType() == "empty"){return true;}
+              else {return false;}
+
+      }
+      }
+//horizontal touching bottom left corner       remove row+1 and remove stern-1
+      else if (row == 9 && stern == 0){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[9][column + 1].getShipType() == "empty" && shipArray[8][column + 1].getShipType() == "empty" &&
+            shipArray[8][column].getShipType() == "empty") {return true;}
+              else {return false;}
+      } 
+            else { //if not a submarine
+          if (
+              shipArray[row - 1][stern].getShipType() == "empty" &&
+              shipArray[row - 1][stern + 1].getShipType() == "empty" &&
+              shipArray[row - 1][column - 1].getShipType() == "empty" &&
+              shipArray[row - 1][column].getShipType() == "empty" &&
+              shipArray[row - 1][column + 1].getShipType() == "empty" &&
+              shipArray[row][column + 1].getShipType() == "empty"){return true;}
+              else {return false;}
+
+      }
+      }  
+      else {return false;}
+        } //done with horizontal ships
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//if vertical
+//row is bottom, stern is on top
+    else if (horizontal == false){
+      int stern = row - (shipLength - 1);
+      if (stern < 0) {return false;}
+
+//vertical and not touching edges
+      else if (0 < row && row < 9 && 0 < column && column < 9 && 0 < stern && stern < 9){
+      if (shipArray[row + 1][column - 1].getShipType() == "empty" && shipArray[row + 1][column].getShipType() == "empty" && 
+      shipArray[row + 1][column + 1].getShipType() == "empty" && shipArray[row][column - 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty" && shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[row - 1][column + 1].getShipType() == "empty" && shipArray[stern + 1 ][column - 1].getShipType() == "empty" &&
+      shipArray[stern + 1][column + 1].getShipType() == "empty" && shipArray[stern][column - 1].getShipType() == "empty" &&
+      shipArray[stern][column + 1].getShipType() == "empty" && shipArray[stern - 1][column - 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column].getShipType() == "empty" && shipArray[stern - 1][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}}
+
+//vertical ONLY touching right edge.      remove column+1
+      else if (0 < row && row < 9 && column == 9 && 0 < stern && stern < 9){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[row + 1][9].getShipType() == "empty" && shipArray[row - 1][9].getShipType() == "empty" &&
+            shipArray[row + 1][8].getShipType() == "empty" && shipArray[row - 1][8].getShipType() == "empty" &&
+            shipArray[row][8].getShipType() == "empty") {return true;}
+              else {return false;}
+        }
+        else{ //if not a submarine
+          if (shipArray[row + 1][column - 1].getShipType() == "empty" && shipArray[row + 1][column].getShipType() == "empty" && 
+      shipArray[row][column - 1].getShipType() == "empty" &&
+      shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[stern + 1 ][column - 1].getShipType() == "empty" &&
+      shipArray[stern][column - 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column - 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column].getShipType() == "empty"){return true;}
+      else {return false;}
+
+        }
+      }
+
+//vertical and ONLY touching left edge.  remove column-1
+      else if (0 < row && row < 9 && 0 < stern && stern < 9 && column == 0){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[row + 1][0].getShipType() == "empty" && shipArray[row - 1][0].getShipType() == "empty" &&
+            shipArray[row + 1][1].getShipType() == "empty" && shipArray[row - 1][1].getShipType() == "empty" &&
+            shipArray[row][1].getShipType() == "empty") {return true;}
+              else {return false;}
+        }
+        else{ //if not a submarine
+          if (shipArray[row + 1][column].getShipType() == "empty" && 
+      shipArray[row + 1][column + 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty" &&
+      shipArray[row - 1][column + 1].getShipType() == "empty" &&
+      shipArray[stern + 1][column + 1].getShipType() == "empty" &&
+      shipArray[stern][column + 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column].getShipType() == "empty" && shipArray[stern - 1][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+
+      }
+      }
+
+//vertical ONLY touching top edge.   remove stern-1
+      else if (stern == 0 && 0 < column && column < 9){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[0][column - 1].getShipType() == "empty" && shipArray[0][column + 1].getShipType() == "empty" &&
+            shipArray[1][column - 1].getShipType() == "empty" && shipArray[1][column + 1].getShipType() == "empty" &&
+            shipArray[1][column].getShipType() == "empty") {return true;}
+              else {return false;}
+        }
+        else{ //if not a submarine
+          if (shipArray[row + 1][column - 1].getShipType() == "empty" && shipArray[row + 1][column].getShipType() == "empty" && 
+      shipArray[row + 1][column + 1].getShipType() == "empty" && shipArray[row][column - 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty" && shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[row - 1][column + 1].getShipType() == "empty" && shipArray[stern + 1 ][column - 1].getShipType() == "empty" &&
+      shipArray[stern + 1][column + 1].getShipType() == "empty" && shipArray[stern][column - 1].getShipType() == "empty" &&
+      shipArray[stern][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+
+      }
+      }
+
+//vertical ONLY touching bottom edge.   remove row+1
+      else if (row == 9 && 0 < column && column < 9 && 0 < stern && stern < 9){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[9][column - 1].getShipType() == "empty" && shipArray[9][column + 1].getShipType() == "empty" &&
+            shipArray[8][column - 1].getShipType() == "empty" && shipArray[8][column + 1].getShipType() == "empty" &&
+            shipArray[8][column].getShipType() == "empty") {return true;}
+              else {return false;}
+
+      }
+      else { //if not a submarine
+          if (
+      shipArray[row][column - 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty" && shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[row - 1][column + 1].getShipType() == "empty" && shipArray[stern + 1 ][column - 1].getShipType() == "empty" &&
+      shipArray[stern + 1][column + 1].getShipType() == "empty" && shipArray[stern][column - 1].getShipType() == "empty" &&
+      shipArray[stern][column + 1].getShipType() == "empty" && shipArray[stern - 1][column - 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column].getShipType() == "empty" && shipArray[stern - 1][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+      }
+      }
+
+//vertical touching top right corner.       remove stern-1 and remove column+1
+      else if (stern == 0 && column == 9){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[0][8].getShipType() == "empty" && shipArray[1][9].getShipType() == "empty" &&
+            shipArray[1][9].getShipType() == "empty") {return true;}
+              else {return false;}
+      }
+      else { //if not a submarine //remove stern -1 and remove column+1
+          if (shipArray[row + 1][column - 1].getShipType() == "empty" && shipArray[row + 1][column].getShipType() == "empty" && 
+      shipArray[row][column - 1].getShipType() == "empty" &&
+      shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[stern + 1 ][column - 1].getShipType() == "empty" &&
+      shipArray[stern][column - 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+      }
+      }
+//vertical touching top left corner
+      else if (stern == 0 && column == 0){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[0][column + 1].getShipType() == "empty" && shipArray[1][column + 1].getShipType() == "empty" &&
+            shipArray[1][column].getShipType() == "empty") {return true;}
+              else {return false;}
+      }
+      else { //if not a submarine //remove column-1 and remove stern-1
+          if (shipArray[row + 1][column].getShipType() == "empty" && 
+      shipArray[row + 1][column + 1].getShipType() == "empty" &&
+      shipArray[row][column + 1].getShipType() == "empty" &&
+      shipArray[row - 1][column + 1].getShipType() == "empty" &&
+      shipArray[stern + 1][column + 1].getShipType() == "empty" &&
+      shipArray[stern][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+      }
+      }
+//vertical touching bottom right corner
+      else if (row == 9 && column == 9){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[9][column - 1].getShipType() == "empty" && shipArray[8][column - 1].getShipType() == "empty" &&
+            shipArray[8][column].getShipType() == "empty") {return true;}
+              else {return false;}
+      }
+      else { //if not a submarine //remove column+1 and remove row+1
+          if ( 
+      shipArray[row][column - 1].getShipType() == "empty" &&
+      shipArray[row - 1][column - 1].getShipType() == "empty" &&
+      shipArray[stern + 1 ][column - 1].getShipType() == "empty" &&
+      shipArray[stern][column - 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column - 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column].getShipType() == "empty"){return true;}
+      else {return false;}
+
+      }
+      }
+//vertical touching bottom left corner
+      else if (row == 9 && column == 0){
+        if (shipLength == 1) { //if submarine
+            if (shipArray[9][column + 1].getShipType() == "empty" && shipArray[8][column + 1].getShipType() == "empty" &&
+            shipArray[8][column].getShipType() == "empty") {return true;}
+              else {return false;}
+      } 
+            else { //if not a submarine //remove row+1 and remove column-1
+          if (
+      
+      shipArray[row][column + 1].getShipType() == "empty" &&
+      shipArray[row - 1][column + 1].getShipType() == "empty" &&
+      shipArray[stern + 1][column + 1].getShipType() == "empty" &&
+      shipArray[stern][column + 1].getShipType() == "empty" &&
+      shipArray[stern - 1][column].getShipType() == "empty" && shipArray[stern - 1][column + 1].getShipType() == "empty"){return true;}
+      else {return false;}
+
+      }
+      }  
+      else {return false;}
+        
+
+
+
+    } //done with vertical
+  else {return false;}
+
+      }
+  
+
+  void placeShipAt(int row, int column, boolean horizontal, Ocean ocean){
+    Ship battleship = new Battleship();
+    Ship cruiser = new Cruiser();
+    Ship destroyer = new Destroyer();
+    Ship submarine = new Submarine();
+
+
+    this.setHorizontal(horizontal);
+    this.setBowRow(row);
+    this.setBowColumn(column);
+    int shipLength = this.getLength();
+
+    Ship[][] shipArray = ocean.getShipArray();
+    
+    if (horizontal){
+      if (shipLength == 4) {shipArray[row][column - 3] = battleship; shipArray[row][column - 1] = null; shipArray[row][column - 2] = null; shipArray[row][column] = null;}
+      else if (shipLength == 3){shipArray[row][column] = cruiser; shipArray[row][column - 1] = cruiser; shipArray[row][column - 2] = cruiser;}
+      else if (shipLength == 2){shipArray[row][column] = destroyer; shipArray[row][column - 1] = destroyer;}
+      else {shipArray[row][column] = submarine;}
+    }
+    else {
+      if(shipLength == 4) {shipArray[row][column] = battleship; shipArray[row - 1][column] = battleship; shipArray[row - 2][column] = battleship; shipArray[row - 3][column] = battleship;}
+      else if (shipLength == 3){shipArray[row][column] = cruiser; shipArray[row - 1][column] = cruiser; shipArray[row - 2][column] = cruiser;}
+      else if (shipLength == 2){shipArray[row][column] = destroyer; shipArray[row - 1][column] = destroyer;}
+      else {shipArray[row][column] = submarine;}
+    }
+  }
+  
+  boolean shootAt(int row, int column){
+    int shipLength = this.getLength();
+    int bowRow = this.getBowRow();
+    int bowColumn = this.getBowColumn();
+    boolean[] hits = this.getHit();
+
+    if (this.isHorizontal() == true){
+
+    if (shipLength == 4){
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else if (bowRow == row && (bowColumn - 1) == column){hits[1] = true; return true;}
+      else if (bowRow == row && (bowColumn - 2) == column){hits[2] = true; return true;}
+      else if (bowRow == row && (bowColumn - 3) == column){hits[3] = true; return true;}
+      else {return false;}
+    }
+
+    else if (shipLength == 3){
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else if (bowRow == row && (bowColumn - 1) == column){hits[1] = true; return true;}
+      else if (bowRow == row && (bowColumn - 2) == column){hits[2] = true; return true;}
+      else {return false;}
+    }
+
+    else if (shipLength == 2){
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else if (bowRow == row && (bowColumn - 1) == column){hits[1] = true; return true;}
+      else {return false;}
+    }
+
+    else {
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else {return false;}}
+    
+    
+
+    }
+    else{ //if vertical
+
+      if (shipLength == 4){
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else if ((bowRow - 1) == row && bowColumn == column){hits[1] = true; return true;}
+      else if ((bowRow - 2) == row && bowColumn == column){hits[2] = true; return true;}
+      else if ((bowRow - 3) == row && bowColumn == column){hits[3] = true; return true;}
+      else {return false;}
+    }
+
+    else if (shipLength == 3){
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else if ((bowRow - 1) == row && bowColumn == column){hits[1] = true; return true;}
+      else if ((bowRow - 2) == row && bowColumn == column){hits[2] = true; return true;}
+      else {return false;}
+    }
+
+    else if (shipLength == 2){
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else if ((bowRow - 1) == row && bowColumn == column){hits[1] = true; return true;}
+      else {return false;}
+    }
+
+    else {
+      if (bowRow == row && bowColumn == column){hits[0] = true; return true;}
+      else {return false;}}
+
+    }
+  }
+
+  boolean isSunk(){
+    int shipLength = this.getLength();
+    boolean[] hits = this.getHit();
+
+    if (shipLength == 4){
+      if (hits[0] == true && hits[1] == true && hits[2] == true && hits[3] == true){return true;}
+      else {return false;}}
+    
+    else if (shipLength == 3){
+      if (hits[0] == true && hits[1] == true && hits[2] == true){return true;}
+      else {return false;}}
+
+    else if (shipLength == 2){
+      if (hits[0] == true && hits[1] == true){return true;}
+      else {return false;}}
+
+    else{
+      if (hits[0] == true){return true;}
+      else {return false;}}
+  };
+
+  @Override
+  public String toString(){
+      if (this.isSunk() == true){return "s";}
+      else {return "x";}
+
+
+  }
+}
