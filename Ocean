@@ -1,0 +1,286 @@
+package battleship;
+import java.util.*;
+
+class Ocean{
+
+
+//instance variables
+private static Ship[][] ships = new Ship[10][10];
+
+private static int shotsFired;
+
+private static int hitCount;
+
+private static int shipsSunk;
+
+static final int OCEAN_SIZE = 10;
+
+
+//constructor
+public Ocean(){
+  Ship[][] ships = new Ship[Ocean.OCEAN_SIZE][Ocean.OCEAN_SIZE];
+  for (int i = 0; i < 10; i++){
+    for (int j = 0; j < 10; j++){
+      this.ships[i][j] = new EmptySea(); //creates a 10x10 grid of EmptySea (no real ships are added yet)
+    }
+  }
+  shotsFired = 0;
+  hitCount = 0;
+  shipsSunk = 0;
+
+}
+
+
+//methods
+void placeAllShipsRandomly(){
+
+  Random rand = new Random(); //to assist with assigning a random row, random column, and random boolean for the horizontal
+
+
+      //creat the entire fleet of 10 ships, each has a unique name
+    Ship battleship1 = new Battleship();
+    Ship cruiser1 = new Cruiser();
+    Ship cruiser2 = new Cruiser();
+    Ship destroyer1 = new Destroyer();
+    Ship destroyer2 = new Destroyer();
+    Ship destroyer3 = new Destroyer();
+    Ship submarine1 = new Submarine();
+    Ship submarine2 = new Submarine();
+    Ship submarine3 = new Submarine();
+    Ship submarine4 = new Submarine();
+
+      //creating the random variables. row/column is a random int between 0 - 10 (exclusive), and the horizontal variable is a random boolean
+    int randomRow = rand.nextInt(10) + 0;
+    int randomColumn = rand.nextInt(10) + 0;
+    boolean randomHoriz = rand.nextBoolean();
+
+
+      //integers that will be used to assist in upcoming loops
+    int b1 = 0; int c1 = 0; int c2 = 0; int d1 = 0; int d2 = 0; int d3 = 0; int s1 = 0; int s2 = 0; int s3 = 0; int s4 = 0;
+
+      //enter the loop when b1 is 0. Inside the loop, assigns new random values to randomRow, randomColumn, and randomHoriz
+      //tries using these variables with okToPlaceShipAt. If it returns false, generates new random variables and tries again
+      //If it returns true, uses these variables with placeShipAt
+    while(b1 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (battleship1.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){b1 = 0;}
+        else {battleship1.placeShipAt(randomRow, randomColumn, randomHoriz, this); b1++;}}
+
+        //this process is nearly identical for all 10 loops (i made 1 loop per ship).
+    while(c1 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (cruiser1.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){c1 = 0;}
+        else {cruiser1.placeShipAt(randomRow, randomColumn, randomHoriz, this); c1++;}}
+
+    while(c2 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (cruiser2.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){c2 = 0;}
+        else {cruiser2.placeShipAt(randomRow, randomColumn, randomHoriz, this); c2++;}}
+
+    while(d1 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (destroyer1.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){d1 = 0;}
+        else {destroyer1.placeShipAt(randomRow, randomColumn, randomHoriz, this); d1++;}}
+
+    while(d2 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (destroyer2.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){d2 = 0;}
+        else {destroyer2.placeShipAt(randomRow, randomColumn, randomHoriz, this); d2++;}}
+
+    while(d3 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (destroyer3.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){d3 = 0;}
+        else {destroyer3.placeShipAt(randomRow, randomColumn, randomHoriz, this); d3++;}}
+
+    while(s1 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (submarine1.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){s1 = 0;}
+        else {submarine1.placeShipAt(randomRow, randomColumn, randomHoriz, this); s1++;}}
+
+    while(s2 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (submarine2.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){s2 = 0;}
+        else {submarine2.placeShipAt(randomRow, randomColumn, randomHoriz, this); s2++;}}
+
+    while(s3 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (submarine3.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){s3 = 0;}
+        else {submarine3.placeShipAt(randomRow, randomColumn, randomHoriz, this); s3++;}}
+
+    while(s4 == 0){
+        randomRow = rand.nextInt(10) + 0; randomColumn = rand.nextInt(10) + 0; randomHoriz = rand.nextBoolean();
+        if (submarine4.okToPlaceShipAt(randomRow, randomColumn, randomHoriz, this) == false){s4 = 0;}
+        else {submarine4.placeShipAt(randomRow, randomColumn, randomHoriz, this); s4++;}}
+
+
+
+        
+
+};
+
+
+//check our ship array at a specific position. If the ship type is "empty" it is EmptySea, and therefore we return false (its not occupied)
+//if it returns anything else, return true (it is occupied)
+boolean isOccupied(int row, int column){
+  if (this.getShipArray()[row][column].getShipType() == "empty"){return false;}
+  else {return true;}
+
+};
+
+//if this coordinate is empty, return false and add 1 to shotsFired
+//if this coordinate contains a sunken ship, return false and add 1 to shotsFired
+//if this coordinate is occupied by a non-sunken ship, uses the ship version of shootAt, so that part of the ship is tagged as "hit", and increases shotsFired and hitCount, and returns true
+boolean shootAt(int row, int column){
+  if (getShipArray()[row][column].getShipType() == "empty"){getShipArray()[row][column].shootAt(row, column); this.shotsFired++; return false;}
+  else {
+    if (getShipArray()[row][column].isSunk() == true){getShipArray()[row][column].shootAt(row, column); this.shotsFired++; return false;}
+  
+  else {
+    getShipArray()[row][column].shootAt(row, column);
+
+    if (getShipArray()[row][column].isSunk() == true){this.shipsSunk++;}
+  
+    this.shotsFired++; this.hitCount++; return true;}
+
+}
+}
+//return the number of shots fired
+int getShotsFired(){
+  return this.shotsFired;
+}
+
+//return the number of hits
+int getHitCount(){
+  return this.hitCount;
+}
+
+//return the number of ships sunk
+int getShipsSunk(){
+  return this.shipsSunk;
+}
+
+//once 10 ships have been sunk, the game is over and this returns true
+boolean isGameOver(){
+  if (shipsSunk == 10) {return true;}
+  else {return false;}
+}
+
+//returns the 10x10 array of ships
+Ship[][] getShipArray(){return ships;};
+
+//prints the ocean that the game is played on. A 10x10 grid with all dots. The dots change depending on if they are hit, and what is in that coordinate
+void print(){
+    // creat the corner
+  System.out.print("  ");
+
+  //add column integers 0-9
+  for (int i = 0; i < this.ships.length; i++){
+    System.out.print(i + " ");
+  }
+
+//linebreak
+  System.out.println("");
+
+  //add row integers 0-9
+  for (int i = 0; i < this.ships.length; i++){
+    System.out.print(i + " ");
+      for (int j = 0; j < this.ships[i].length; j++){ //we are iterating through i and j, so we end up selecting all 10 positions in each of the 10 rows
+
+        if (this.isOccupied(i, j) == false){ //if the coordinate DOES NOT contain anything, use this block
+          if (ships[i][j].getHit()[0] == true){System.out.print("- ");} //if the empty coordinate HAS been hit already, print "- "
+          else {System.out.print(". ");}} //if the empty coordinate HAS NOT been hit already, print ". "
+
+
+        else {//if the coordinate DOES contain something
+              //create variables for the bow row, bow column, horizontal status, and ship size
+            int bowRow = ships[i][j].getBowRow();
+            int bowColumn = ships[i][j].getBowColumn();
+            boolean horizontal = ships[i][j].isHorizontal();
+            int size = ships[i][j].getLength();
+
+//For line 201 - 241
+//We use the bow position and ship size to determine what part of the ship we are selecting (ex: bow of battleship = 0, next spot = 1, etc)
+//With this knowledge, we can use getHit() to determine if this part of the ship has been hit already
+//If it has not been hit, print ". "
+//If that position has been hit, check if the ship is sunk. prints "s "" if the whole ship is sunk, or prints "x "" if it has not been sunk. 
+
+
+
+            if (horizontal){
+                if (size == 4){
+                  if(bowRow == i && bowColumn == j){if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else if (bowRow == i && bowColumn == j + 1){if (ships[i][j].getHit()[1] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else if (bowRow == i && bowColumn == j + 2){if (ships[i][j].getHit()[2] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else {if (ships[i][j].getHit()[3] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                }
+                else if (size == 3){
+                  if(bowRow == i && bowColumn == j){if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else if (bowRow == i && bowColumn == j + 1){if (ships[i][j].getHit()[1] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else {if (ships[i][j].getHit()[2] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                }
+                else if (size == 2){
+                  if(bowRow == i && bowColumn == j){if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else {if (ships[i][j].getHit()[1] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+
+                }
+                else {if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {System.out.print("s ");}}
+            }
+
+            else{//it is vertical. repeats the same process as above
+
+                if (size == 4){
+                  if (bowRow == i && bowColumn == j){if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else if (bowRow == (i + 1) && bowColumn == j){if (ships[i][j].getHit()[1] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else if (bowRow == (i + 2) && bowColumn == j){if (ships[i][j].getHit()[2] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else {if (ships[i][j].getHit()[3] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                }
+
+                else if (size == 3){
+                  if (bowRow == i && bowColumn == j){if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else if (bowRow == (i + 1) && bowColumn == j){if (ships[i][j].getHit()[1] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else {if (ships[i][j].getHit()[2] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                }
+
+                else if (size == 2){
+                  if (bowRow == i && bowColumn == j){if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                  else {if (ships[i][j].getHit()[1] == false){System.out.print(". ");} else {if (ships[i][j].isSunk() == true){System.out.print("s ");} else {System.out.print("x ");}}}
+                }
+
+                else {if (ships[i][j].getHit()[0] == false){System.out.print(". ");} else {System.out.print("s ");}}
+            }
+        }
+      } //after a full row is printed, go to the next line
+        System.out.println("");
+      }
+
+}
+
+//prints a blank grid that shows the position and type of each ship
+void printWithShips() {
+  //corner
+  System.out.print("  ");
+
+  //column integers
+  for (int i = 0; i < this.ships.length; i++){
+    System.out.print(i + " ");
+  }
+
+  System.out.println("");
+
+  //row integers
+  for (int i = 0; i < this.ships.length; i++){
+    System.out.print(i + " ");
+
+  //iterate through the i and j again, so we go thorugh the entire grid
+  //we only print this to help see where the ships are while debugging
+      for (int j = 0; j < this.ships[i].length; j++){
+        if (ships[i][j].getShipType() == "empty") {System.out.print("  ");} //if emptysea, print nothing
+        else if (ships[i][j].getShipType() == "battleship") {System.out.print("b ");} //if battlship, print b
+        else if (ships[i][j].getShipType() == "cruiser") {System.out.print("c ");} //if cruiser print c
+        else if (ships[i][j].getShipType() == "destroyer") {System.out.print("d ");} //if destroyer print d
+        else {System.out.print("s ");}//if submarine print s
+      }
+      System.out.println("");
+  }
+  }
+}
