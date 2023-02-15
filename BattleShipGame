@@ -1,0 +1,86 @@
+
+package battleship;
+import java.util.*;
+
+import java.util.Scanner;
+
+public class BattleshipGame{
+
+  public static void main(String[] args){
+  
+  //Instructions
+  System.out.println("Welcome to Battleship!");
+  System.out.println("");
+  System.out.println("To fire at a coordinate, you will be prompted to enter a 2 digit integer.");
+  System.out.println("The first digit represents the row, and the second digit represets the column.");
+  System.out.println("Please enter your coordinates as a 2-digit integer. For example, 49 shoots at row 4, column 9.");
+  System.out.println("");
+  System.out.println("Some invalid inputs: (1,2)(3-4)(5 6)(ab)(one two)");
+  System.out.println("Some valid inputs: (12)(34)(56)(00)(99)");
+  System.out.println("");
+  System.out.println("If you enter a bad coordinate the game will crash. Fair warning!");
+  System.out.println("");
+  System.out.println("");
+  
+  //create ocean
+  Ocean ocean = new Ocean();
+
+  //place ships
+  ocean.placeAllShipsRandomly();
+  
+  //print with ships (used while debugging. I turned it into a comment so it is not present in the actual game)
+  //ocean.printWithShips();
+
+  //create scanner
+  Scanner scan = new Scanner(System.in);
+
+    //print ocean and stats
+      ocean.print();
+      System.out.println("Shots: " + ocean.getShotsFired());
+      System.out.println("Hits: " + ocean.getHitCount());
+      System.out.println("Sinks: " + ocean.getShipsSunk());
+
+  //while the game is not over
+  while (ocean.isGameOver() == false){
+
+      //get user input for coordinates
+      System.out.println("Captain, where should we fire?");
+      String givenCoordinate = scan.nextLine(); 
+
+      //turn input into 2 integers
+      char firstCoordinate = givenCoordinate.charAt(0);
+      char secondCoordinate = givenCoordinate.charAt(1);
+
+      //assign integers to variables
+      int firstInt = Character.getNumericValue(firstCoordinate);
+      int secondInt = Character.getNumericValue(secondCoordinate);
+
+  
+      System.out.println("");
+      System.out.println("Roger that! Firing at " + givenCoordinate);
+      System.out.println("");
+
+      //call the shootAt method with the given coordinates 
+      ocean.shootAt(firstInt, secondInt);
+
+      //after firing, print the newly updated ocean and updated stats
+      ocean.print();
+      System.out.println("Shots: " + ocean.getShotsFired());
+      System.out.println("Hits: " + ocean.getHitCount());
+      System.out.println("Sinks: " + ocean.getShipsSunk());
+  }
+
+  //when 10 ships are sunk, the isGameOver will be true, and the loop will end.
+
+  //print a victory message and final stats
+  System.out.println("");
+  System.out.println("Victory! We have defeated the enemy fleet!");
+  System.out.println("");
+  System.out.println("Final Stats:");
+      System.out.println("Shots: " + ocean.getShotsFired());
+      System.out.println("Hits: " + ocean.getHitCount());
+      System.out.println("Sinks: " + ocean.getShipsSunk());
+
+  }
+
+}
