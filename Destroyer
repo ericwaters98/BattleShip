@@ -1,0 +1,16 @@
+package battleship;
+
+public class Destroyer extends Ship{
+
+  private static final int SHIP_LENGTH = 2;
+  private static final String SHIP_TYPE = "destroyer";
+
+  public Destroyer(){
+    super(Destroyer.SHIP_LENGTH);
+  }
+
+  @Override
+  public String getShipType(){
+    return Destroyer.SHIP_TYPE;
+  }
+}
